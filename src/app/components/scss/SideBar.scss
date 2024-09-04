@@ -1,0 +1,71 @@
+.sideBarContainer {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 30rem;
+  height: 100vh;
+  background: #f9f9f9;
+
+  .topIconBox {
+    display: flex;
+    margin: 2rem;
+    justify-content: space-between;
+
+    .iconBox {
+      display: flex;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 1rem;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        background: #ecececec;
+      }
+
+      svg {
+        color: #7d7d7d;
+        font-size: 1.6rem;
+      }
+    }
+  }
+
+  .subBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    .listBox {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 90%;
+      height: 4.5rem;
+      border-radius: 1rem;
+      gap: 1rem;
+
+      &:active {
+        background: rgba(225, 225, 225, 0.89) !important;
+        transform: scale(0.98);
+      }
+
+      &:hover {
+        background: #ecececec;
+      }
+
+      svg, img {
+        width: 3rem;
+        height: 3rem;
+        color: #7d7d7d;
+        margin-left: 1rem;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        font-family: Pretendard-Light;
+        color: black;
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+.search-container {
+  position: relative;
+  display: flex;
+  width: 76rem;
+  height: 5rem;
+  background: #f4f4f4;
+  align-items: center;
+  border-radius: 2.4rem;
+  transform: translateY(75vh);
+
+  input {
+    width: 89.5%;
+    height: 100%;
+    padding: 0 2rem;
+    font-size: 1.6rem;
+    border: none;
+    border-radius: 2.4rem;
+    background: #f4f4f4;
+    outline: none;
+  }
+
+  .round {
+    width: 3.2rem;
+    height: 3.2rem;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+
+    svg {
+      color: #fff;
+    }
+  }
+}

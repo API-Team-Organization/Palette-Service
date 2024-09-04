@@ -1,0 +1,35 @@
+.chat-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 30rem);
+  height: 100vh;
+  align-items: center;
+  margin-left: 30rem;
+
+  .chatHeader {
+    margin-top: 2rem;
+    display: flex;
+    width: 95%;
+    height: 4rem;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      color: #7d7d7d;
+      font-family: Pretendard-Mideum;
+    }
+
+    .profile {
+      width: 4rem;
+      height: 4rem;
+      background: #7d7d7d;
+      border-radius: 50%;
+    }
+  }
+
+  .Logo {
+    display: flex;
+    transform: translateY(30vh);
+  }
+}
