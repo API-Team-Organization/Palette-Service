@@ -1,0 +1,34 @@
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  label {
+    font-size: 12px;
+    font-family: Pretendard-SemiBold;
+    color: #76767e;
+    margin-bottom: 10px;
+
+    .required {
+      padding-left: 4px;
+      color: #f23f42;
+    }
+  }
+
+  input {
+    width: 400px;
+    height: 20px;
+    padding: 10px;
+    border: 1px solid #b6b9c1;
+    color: black;
+    font-size: 15px;
+    font-family: Pretendard-Regular;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #6d63ff;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+.login-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .logo {
+    margin-top: 4rem;
+  }
+
+  h1 {
+    margin-top: 15rem;
+    color: black;
+    font-family: Pretendard-SemiBold;
+    font-size: 3.2rem;
+  }
+
+  .inputListBox {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .loginBtn {
+    margin-top: 1.5rem;
+    position: relative;
+    width: 42rem;
+    height: 5rem;
+    border: none;
+    background: #4762f5;
+    border-radius: 0.8rem;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+      background: rgba(71, 98, 245, 0.86);
+    }
+
+    h2 {
+        color: white;
+        font-size: 1.8rem;
+        font-family: Pretendard-SemiBold;
+    }
+  }
+
+  .signup {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    color: black;
+    font-size: 1.6rem;
+    font-family: Pretendard-Light;
+
+    .link {
+      cursor: pointer;
+      a {
+        text-decoration-line: none;
+        color: #4762f5;
+        font-family: Pretendard-Regular;
+      }
+    }
+  }
+
+  .term {
+    margin-top: 10%;
+    font-size: 1.4rem;
+    color: #4762f5;
+
+    .divider {
+      color: black;
+    }
+  }
+}
