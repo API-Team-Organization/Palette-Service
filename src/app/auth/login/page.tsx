@@ -15,8 +15,6 @@ export default function login () {
     const emailPattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
     const passwordPattern = /[a-zA-Z0-9!@#\$%\^\&\*,.<>~]{8,32}/
 
-    console.log(email, password)
-
     const submitHandler = async (e: any) => {
         try {
             e.preventDefault()
@@ -39,7 +37,7 @@ export default function login () {
 
                     if (res.data.code === 200) {
                         alert('로그인에 성공했습니다.')
-                        Cookies.set('token', res.headers["x-auth-token"])
+                        Cookies.set('token', res.headers["x-auth-token"], { expires: 18000 })
                         window.location.href = '/'
                     }
                 } catch (err) {

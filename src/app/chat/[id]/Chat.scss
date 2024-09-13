@@ -1,5 +1,5 @@
 .chat-container {
-  position: fixed;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: calc(100% - 30rem);
@@ -28,11 +28,13 @@
     }
   }
 
-  .Logo {
+  .chat {
+    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
+    flex-direction: column;
+    width: calc(100% - 30rem);
+    height: calc(100vh - 16rem);
+    overflow-y: scroll;
   }
 
   form {

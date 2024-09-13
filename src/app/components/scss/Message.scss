@@ -1,0 +1,24 @@
+.message-container {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+
+  &.ai {
+    display: flex;
+    justify-content: start;
+  }
+
+  h1 {
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 0.8rem;
+    color: white;
+    font-family: Pretendard-Mideum;
+    font-size: 1.6rem;
+  }
+
+  .image {
+    margin-top: 1rem;
+    border-radius: 1rem;
+  }
+}
