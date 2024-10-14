@@ -23,12 +23,12 @@ export default function login () {
                 alert('이메일 형식이 올바르지 않습니다.')
                 return;
             }
-            if (!passwordPattern.test(password)) {
+            if (passwordPattern.test(password)) {
                 alert('비밀번호 형식이 올바르지 않습니다.')
                 return;
             }
 
-            if (emailPattern.test(email) && passwordPattern.test(password)) {
+            if (emailPattern.test(email)) {
                 try {
                     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                         email,

@@ -8,7 +8,7 @@
   align-items: center;
   border-radius: 2.4rem;
 
-  input {
+  .input {
     width: 89.5%;
     height: 100%;
     padding: 0 2rem;
@@ -20,6 +20,8 @@
   }
 
   .round {
+    display: flex;
+    justify-content: center;
     width: 3.2rem;
     height: 3.2rem;
     background: #000;

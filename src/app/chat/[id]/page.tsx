@@ -3,18 +3,20 @@
 import './Chat.scss'
 
 import Image from "next/image";
-import SearchBar from "@/app/components/SearchBar";
+import SearchBar, {SearchType} from "@/app/components/SearchBar";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { io } from 'socket.io-client'
+import {io} from 'socket.io-client'
 import axios from "axios";
 import Message from "@/app/components/Message";
+import SelectPicker from "@/app/components/SelectPicker";
 
 export default function Page ({ params }: { params: { slug: string } }) {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string }[]>([]);
+    const [qna, setQna] = useState([]);
 
     const getChatLists = async () => {
         try {
@@ -47,26 +49,45 @@ export default function Page ({ params }: { params: { slug: string } }) {
             })
 
             socket.on('message', (message) => {
-                if (message.data.action === 'END') {
-                    console.log('Conversion completed');
-                    socket.disconnect();
-                } else {
-                    setMessageList((prevState) => [...prevState, { message: message.data.message.message, action: (message.data.action === 'TEXT' || message.data.action === 'START') ? 'CHAT' : 'IMAGE', isAi: message.data.message.isAi }])
-                }
+                setMessageList((prevState) => [...prevState, { message: message.message, action: message.resource, isAi: message.isAi }])
             });
         } catch (error) {
             console.error('Failed to connect WebSocket:', error);
         }
     };
 
+    const getQna = async () => {
+        try {
+            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/room/${params?.id}/qna`, {
+                headers: {
+                    'x-auth-token': Cookies.get('token')
+                }
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    setQna(res.data.data)
+                }
+            });
+        } catch (err) {
+            console.error('QnA를 가져오는 중 오류 발생:', err);
+        }
+    }
+
     useEffect(() => {
-        getChatLists();
-        connectWebSocket();
+        if (chat.length >= 3) {
+            window.location.reload();
+        }
+
+        getChatLists().catch(console.error);
+        getQna().catch(console.error);
+
+        connectWebSocket().catch(console.error);
     }, []);
 
     const submitHandler = async (e: any) => {
         e.preventDefault();
+        setSubmitted(true);
         try {
+            // @ts-ignore
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, { message }, {
                 headers: {
                     'x-auth-token': Cookies.get('token')
@@ -81,7 +102,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
         }
     }
 
-    console.log(messageList)
+    console.log(qna[0]?.question.choices)
 
     return (
         <main className={`chat-container`}>
@@ -103,8 +124,17 @@ export default function Page ({ params }: { params: { slug: string } }) {
                     )
                 })}
             </div>
-            <form onSubmit={submitHandler} onDisab>
-                <SearchBar message={message} setMessage={setMessage}/>
+            <form onSubmit={submitHandler}>
+                <div>
+                    {
+                        qna[0]?.question.choices.map((qna: any, idx: number) => {
+                            return (
+                                <button key={idx}>{qna.id}</button>
+                            )
+                        })
+                    }
+                </div>
+                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} type={SearchType.INPUT}/>
             </form>
         </main>
     )

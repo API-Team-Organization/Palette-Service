@@ -1,21 +1,52 @@
-import './scss/SearchBar.scss'
+import './scss/SearchBar.scss';
 import UploadSVG from "@/app/components/svgs/UploadSVG";
-import {FC} from "react";
+import React, { FC } from 'react';
+
+export enum SearchType {
+  INPUT = "input",
+  BUTTON = "button",
+}
 
 interface SearchBarProps {
-    message: string;
-    setMessage: (message: string) => void;
+  message?: string;
+  setMessage?: (message: string) => void;
+  isDisabled?: boolean;
+  type: SearchType;
+  fn?: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
+  onSearch?: () => void;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ message, setMessage }) => {
-    return (
-        <div className={`search-container`}>
-            <input type={"text"} disabled={true} placeholder={"메세지 Palette.AI"} value={message} onChange={(e) => setMessage(e.target.value)} />
-            <div className={`round`}>
-                <UploadSVG />
-            </div>
-        </div>
-    )
-}
+const SearchBar: FC<SearchBarProps> = ({
+                                         message = '',
+                                         setMessage,
+                                         isDisabled = false,
+                                         type,
+                                         onSearch,
+                                         fn
+                                       }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage?.(e.target.value);
+  };
+
+  const handleButtonClick = () => {
+    onSearch?.();
+  };
+
+  return (
+      <div className="search-container">
+        <input
+            className="input"
+            type="text"
+            disabled={isDisabled || type === SearchType.BUTTON}
+            placeholder="메세지 Palette.AI"
+            value={message}
+            onChange={handleInputChange}
+        />
+        <button className="round" type={"submit"}>
+          <UploadSVG />
+        </button>
+      </div>
+  );
+};
 
 export default SearchBar;
