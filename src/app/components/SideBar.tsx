@@ -59,13 +59,31 @@ const SideBar = () => {
         getRoomLists();
     }, []);
 
+    const submitHandler = async () => {
+        let token = Cookies.get('token');
+
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/room`, {}, {
+                headers: {
+                    'x-auth-token': token
+                }
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    window.location.href = `/chat/${res.data.data.id}`;
+                }
+            })
+        } catch (err) {
+            console.error('채팅 목록을 가져오는 중 오류 발생:', err);
+        }
+    }
+
     return (
         <div className={`sideBarContainer`}>
             <div className={`topIconBox`}>
                 <div className={`iconBox`}>
                     <SidebarSVG/>
                 </div>
-                <div className={`iconBox`}>
+                <div className={`iconBox`} onClick={submitHandler}>
                     <WriteSVG />
                 </div>
             </div>

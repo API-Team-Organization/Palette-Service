@@ -1,0 +1,44 @@
+.grid-container {
+  position: fixed;
+  display: grid;
+  transform: translateY(30vh);
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+  z-index: 9999;
+
+  .grid-item {
+    color: #007bff;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #007bff;
+    border-radius: 1.25rem;
+    transition: all 0.3s;
+
+    &:active {
+      transform: scale(1.05);
+    }
+
+    &:hover {
+      background: #d9d9d9;
+    }
+
+    &.clicked {
+      color: #ffffff;
+      background-color: #2196F3;
+    }
+
+    &.all-clicked {
+      background-color: #FFC107;
+    }
+  }
+
+  .btn {
+    margin-top: 1rem;
+  }
+}

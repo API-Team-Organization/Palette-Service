@@ -10,14 +10,19 @@ import {io} from 'socket.io-client'
 import axios from "axios";
 import Message from "@/app/components/Message";
 import SelectPicker from "@/app/components/SelectPicker";
+import GridBtn from "@/app/components/GridBtn";
+import {useGridStore} from "@/app/store/useStore";
 
 export default function Page ({ params }: { params: { slug: string } }) {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
-    const [submitted, setSubmitted] = useState(false);
-    const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string }[]>([]);
+    const [submitted, setSubmitted] = useState(true);
+    const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string, promptId: string }[]>([]);
     const [qna, setQna] = useState([]);
     const [displayQna, setDisplayQna] = useState<string | null>(null);
+    const status = qna.find(it => messageList[5]?.promptId == it.id) != null;
+    const grid = useGridStore(state => state.grid);
+    const [open, setOpen] = useState(false);
 
     const getChatLists = async () => {
         try {
@@ -50,7 +55,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
             })
 
             socket.on('message', (message) => {
-                setMessageList((prevState) => [...prevState, { message: message.message, action: message.resource, isAi: message.isAi }])
+                setMessageList((prevState) => [...prevState, { message: message.message, action: message.resource, isAi: message.isAi, promptId: message.promptId }])
             });
         } catch (error) {
             console.error('Failed to connect WebSocket:', error);
@@ -85,7 +90,11 @@ export default function Page ({ params }: { params: { slug: string } }) {
                 headers: {
                     'x-auth-token': Cookies.get('token')
                 }
-            })
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    setSubmitted(false)
+                }
+            });
         } catch (err) {
             console.error('QnA를 가져오는 중 오류 발생:', err);
         }
@@ -104,32 +113,54 @@ export default function Page ({ params }: { params: { slug: string } }) {
 
     const submitHandler = async (e: any) => {
         e.preventDefault();
-        setSubmitted(true);
         try {
             // @ts-ignore
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
                 data: {
-                    "type": "USER_INPUT",
-                    "input": message
+                    type: "USER_INPUT",
+                    input: message
                 }
             }, {
                 headers: {
                     'x-auth-token': Cookies.get('token')
                 }
-            })
-
-            if (!(res.status === 200)) {
-                throw new Error(`메시지 전송에 실패했습니다. ${res.data.message}`)
-            } else {
-                setSubmitted(false);
-            }
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    setSubmitted(false)
+                    setMessage('')
+                }
+            });
         } catch (err) {
             throw new Error(`클라이언트에서 에러가 발생했습니다. ${err}`)
         }
     }
 
+    const clickHandler = async () => {
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
+                data: {
+                    type: "GRID",
+                    choice: grid
+                }
+            }, {
+                headers: {
+                    'x-auth-token': Cookies.get('token')
+                }
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    setOpen(true)
+                }
+            });
+        } catch (err) {
+            throw new Error(`${err}`)
+        }
+    }
+
+    console.log(qna)
+    console.log(messageList)
+    console.log(open)
+    // @ts-ignore
     const filteredQna = qna.filter((item) => item?.answer !== null);
-    console.log(filteredQna);
 
     return (
         <main className={`chat-container`}>
@@ -151,6 +182,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
                     )
                 })}
             </div>
+            <GridBtn status={open ? false : status} fn={clickHandler} />
             <div className={`qna-display`} style={filteredQna.length != 0 || displayQna ? { display: 'none' }: {} }>
                 {
                     qna[0]?.question.choices.map((qna: any, idx: number) => {
@@ -161,7 +193,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
                 }
             </div>
             <form onSubmit={submitHandler}>
-                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted || filteredQna.length == 0} type={SearchType.INPUT}/>
+                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} type={SearchType.INPUT}/>
             </form>
         </main>
     )
