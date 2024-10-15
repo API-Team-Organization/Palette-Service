@@ -17,6 +17,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
     const [submitted, setSubmitted] = useState(false);
     const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string }[]>([]);
     const [qna, setQna] = useState([]);
+    const [displayQna, setDisplayQna] = useState<string | null>(null);
 
     const getChatLists = async () => {
         try {
@@ -72,6 +73,24 @@ export default function Page ({ params }: { params: { slug: string } }) {
         }
     }
 
+    const setDisplay = async (id: string) => {
+        setDisplayQna(id)
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
+                data: {
+                    type: "SELECTABLE",
+                    "choiceId": id
+                }
+            }, {
+                headers: {
+                    'x-auth-token': Cookies.get('token')
+                }
+            })
+        } catch (err) {
+            console.error('QnA를 가져오는 중 오류 발생:', err);
+        }
+    }
+
     useEffect(() => {
         if (chat.length >= 3) {
             window.location.reload();
@@ -88,21 +107,29 @@ export default function Page ({ params }: { params: { slug: string } }) {
         setSubmitted(true);
         try {
             // @ts-ignore
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, { message }, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
+                data: {
+                    "type": "USER_INPUT",
+                    "input": message
+                }
+            }, {
                 headers: {
                     'x-auth-token': Cookies.get('token')
                 }
-            });
+            })
 
             if (!(res.status === 200)) {
                 throw new Error(`메시지 전송에 실패했습니다. ${res.data.message}`)
+            } else {
+                setSubmitted(false);
             }
         } catch (err) {
             throw new Error(`클라이언트에서 에러가 발생했습니다. ${err}`)
         }
     }
 
-    console.log(qna[0]?.question.choices)
+    const filteredQna = qna.filter((item) => item?.answer !== null);
+    console.log(filteredQna);
 
     return (
         <main className={`chat-container`}>
@@ -115,26 +142,26 @@ export default function Page ({ params }: { params: { slug: string } }) {
             <div className={`chat`}>
                 {chat.map((chat: any, idx: number) => {
                     return (
-                        <Message message={chat.message} action={chat.resource} isAI={chat.isAi} key={idx} />
+                        <Message message={chat.message} action={chat.resource} isAI={chat.isAi} key={idx}/>
                     )
                 })}
                 {messageList.map((message, idx) => {
                     return (
-                        <Message message={message.message} action={message.action} isAI={message.isAi} key={idx} />
+                        <Message message={message.message} action={message.action} isAI={message.isAi} key={idx}/>
                     )
                 })}
             </div>
+            <div className={`qna-display`} style={filteredQna.length != 0 || displayQna ? { display: 'none' }: {} }>
+                {
+                    qna[0]?.question.choices.map((qna: any, idx: number) => {
+                        return (
+                            <button className={`displayBtn`} onClick={() => setDisplay(qna.id)} key={idx}>{qna.displayName}</button>
+                        )
+                    })
+                }
+            </div>
             <form onSubmit={submitHandler}>
-                <div>
-                    {
-                        qna[0]?.question.choices.map((qna: any, idx: number) => {
-                            return (
-                                <button key={idx}>{qna.id}</button>
-                            )
-                        })
-                    }
-                </div>
-                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} type={SearchType.INPUT}/>
+                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted || filteredQna.length == 0} type={SearchType.INPUT}/>
             </form>
         </main>
     )

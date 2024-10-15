@@ -11,7 +11,7 @@ interface MessageProps {
 
 const Message: FC<MessageProps> = ({ message, action, isAI }) => {
     return (
-        <div className={`message-container ${isAI ? 'ai' : ''}`}>
+        <div className={`message-container ${isAI ? 'ai' : ''}`} style={isAI ? { maxWidth: '40rem' } : {}}>
             {
                 action === 'IMAGE' ? <Image src={message} alt={'ai-image'} className={`image`} width={250} height={250}
                                             unoptimized={true}/> :

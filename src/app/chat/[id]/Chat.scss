@@ -42,4 +42,25 @@
     bottom: 2rem;
     width: 76rem;
   }
+
+  .qna-display {
+    display: flex;
+    gap: 2rem;
+    transform: translateY(-2rem);
+
+    .displayBtn {
+      background: #fff;
+      padding: 1rem 3rem;
+      border: 1px solid #b6b6b6;
+      border-radius: 2rem;
+      box-shadow: #76767e 0px 0.5px 0px 0px;
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-family: Pretendard-SemiBold;
+
+      &:active {
+        transform: scale(1.05);
+      }
+    }
+  }
 }

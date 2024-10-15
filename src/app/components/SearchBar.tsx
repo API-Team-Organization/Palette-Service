@@ -42,7 +42,7 @@ const SearchBar: FC<SearchBarProps> = ({
             value={message}
             onChange={handleInputChange}
         />
-        <button className="round" type={"submit"}>
+        <button className="round" type={"submit"} disabled={isDisabled}>
           <UploadSVG />
         </button>
       </div>
