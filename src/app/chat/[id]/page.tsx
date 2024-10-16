@@ -17,7 +17,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const [submitted, setSubmitted] = useState(true);
-    const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string, promptId: string }[]>([]);
+    const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string, promptId: string, datetime: Date }[]>([]);
     const [qna, setQna] = useState([]);
     const [displayQna, setDisplayQna] = useState<string | null>(null);
     const status = qna.find(it => messageList[5]?.promptId == it.id) != null;
@@ -55,7 +55,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
             })
 
             socket.on('message', (message) => {
-                setMessageList((prevState) => [...prevState, { message: message.message, action: message.resource, isAi: message.isAi, promptId: message.promptId }])
+                setMessageList((prevState) => [...prevState, { message: message.message, action: message.resource, isAi: message.isAi, promptId: message.promptId, datetime: message.datetime }])
             });
         } catch (error) {
             console.error('Failed to connect WebSocket:', error);
@@ -101,21 +101,16 @@ export default function Page ({ params }: { params: { slug: string } }) {
     }
 
     useEffect(() => {
-        if (chat.length >= 3) {
-            window.location.reload();
-        }
-
+        connectWebSocket().catch(console.error);
         getChatLists().catch(console.error);
         getQna().catch(console.error);
-
-        connectWebSocket().catch(console.error);
     }, []);
 
     const submitHandler = async (e: any) => {
         e.preventDefault();
         try {
             // @ts-ignore
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
+           await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
                 data: {
                     type: "USER_INPUT",
                     input: message
@@ -131,7 +126,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
                 }
             });
         } catch (err) {
-            throw new Error(`클라이언트에서 에러가 발생했습니다. ${err}`)
+            alert('이미 모든 질문에 대해 대답하였습니다')
         }
     }
 
@@ -173,12 +168,12 @@ export default function Page ({ params }: { params: { slug: string } }) {
             <div className={`chat`}>
                 {chat.map((chat: any, idx: number) => {
                     return (
-                        <Message message={chat.message} action={chat.resource} isAI={chat.isAi} key={idx}/>
+                        <Message message={chat.message} datetime={chat.datetime} action={chat.resource} isAI={chat.isAi} key={idx}/>
                     )
                 })}
                 {messageList.map((message, idx) => {
                     return (
-                        <Message message={message.message} action={message.action} isAI={message.isAi} key={idx}/>
+                        <Message message={message.message} datetime={message.datetime} action={message.action} isAI={message.isAi} key={idx}/>
                     )
                 })}
             </div>

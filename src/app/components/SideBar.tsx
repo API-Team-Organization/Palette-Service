@@ -98,7 +98,7 @@ const SideBar = () => {
                 </div>
             </div>
             <div className={`roomBox`}>
-                {roomLists && roomLists.map((room) => (
+                {roomLists && roomLists.reverse().map((room) => (
                     <Link key={room.id} href={`/chat/${room.id}`} style={{ textDecorationLine: 'none' }}>
                         <div className={`room`}>
                             <h2>{room.title}</h2>
