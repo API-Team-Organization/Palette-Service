@@ -1,8 +1,10 @@
+'use client';
+
 import './scss/Message.scss'
 
-import {FC} from "react";
+import {FC, useState} from "react";
 import Image from "next/image";
-import Link from "next/link";
+import ImageViewer from "@/app/components/ImageViewer";
 
 interface MessageProps {
     message: string;
@@ -23,11 +25,14 @@ const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
 
         return `${isPM ? '오후' : '오전'} ${hours}:${formattedMinutes}분`;
     }
+    const [isOpen, setOpen] = useState(false)
+
     return (
         <div className={`message-container ${isAI ? 'ai' : ''}`} style={isAI ? { maxWidth: '42rem' } : {}}>
+            { isOpen && <ImageViewer url={message} /> }
             {
-                action === 'IMAGE' ? <Link href={message}><Image src={message} alt={'ai-image'} className={`image`} width={250} height={250}
-                                                  unoptimized={true}/></Link> :
+                action === 'IMAGE' ? <Image onClick={() => setOpen(!isOpen)} src={message} alt={'ai-image'} className={`image`} width={250} height={250}
+                                            unoptimized={true}/>:
                     <div style={{ display: "flex", alignItems: 'end' }}>
                         {!isAI ? <p style={{
                             fontSize: '1.25rem',
@@ -44,7 +49,6 @@ const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
                             color: '#797979',
                             marginTop: '0.8rem',
                             marginLeft: '0.8rem',
-                            position: 'static'
                         }}>{formatTime(new Date(datetime))}</p> : null}
                     </div>
             }

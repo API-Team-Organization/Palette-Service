@@ -11,7 +11,7 @@ interface SearchBarProps {
   message?: string;
   setMessage?: (message: string) => void;
   isDisabled?: boolean;
-  type: SearchType;
+  // type: SearchType;
   fn?: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
   onSearch?: () => void;
 }
@@ -20,9 +20,7 @@ const SearchBar: FC<SearchBarProps> = ({
                                          message = '',
                                          setMessage,
                                          isDisabled = false,
-                                         type,
                                          onSearch,
-                                         fn
                                        }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage?.(e.target.value);
@@ -37,7 +35,7 @@ const SearchBar: FC<SearchBarProps> = ({
         <input
             className="input"
             type="text"
-            disabled={isDisabled || type === SearchType.BUTTON}
+            disabled={isDisabled}
             placeholder="메세지 Palette"
             value={message}
             onChange={handleInputChange}

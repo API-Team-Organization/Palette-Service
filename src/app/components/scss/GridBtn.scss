@@ -1,5 +1,4 @@
 .grid-container {
-  position: fixed;
   display: grid;
   transform: translateY(30vh);
   grid-template-columns: repeat(3, 1fr);
@@ -7,6 +6,9 @@
   max-width: 300px;
   margin: 0 auto;
   z-index: 9999;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 2.5rem;
 
   .grid-item {
     color: #007bff;
@@ -16,7 +18,7 @@
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
-    border: 1px solid #007bff;
+    border: 2px solid #007bff;
     border-radius: 1.25rem;
     transition: all 0.3s;
 

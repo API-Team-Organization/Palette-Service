@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from 'js-cookie';
 import {useState} from "react";
-import GridBtn from "@/app/components/GridBtn";
 
 export default function login () {
     const [email, setEmail] = useState('');

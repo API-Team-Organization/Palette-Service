@@ -1,8 +1,6 @@
 'use client';
 
 import './scss/SideBar.scss';
-
-import SidebarSVG from "@/app/components/svgs/SidebarSVG";
 import WriteSVG from "@/app/components/svgs/WriteSVG";
 import Image from "next/image";
 import Logo from '../../../public/Images/Logo.png';
@@ -90,9 +88,9 @@ const SideBar = () => {
     return (
         <div className={`sideBarContainer`}>
             <div className={`topIconBox`}>
-                <div className={`iconBox`}>
-                    <SidebarSVG />
-                </div>
+                {/*<div className={`iconBox`}>*/}
+                {/*    <SidebarSVG />*/}
+                {/*</div>*/}
                 <div className={`iconBox`} onClick={submitHandler}>
                     <WriteSVG />
                 </div>
@@ -110,8 +108,9 @@ const SideBar = () => {
             <div className={`roomBox`}>
                 {roomLists && roomLists.map((room, idx) => (
                     <div key={idx}>
-                        <Link href={`/chat/${room.id}`} style={{textDecorationLine: 'none'}}>
-                            <div className={`room`}>
+
+                        <div className={`room`}>
+                            <Link href={`/chat/${room.id}`} style={{textDecorationLine: 'none'}}>
                                 <h2>{room.title}</h2>
                                 <div
                                     className={`utilBox`}
@@ -123,12 +122,12 @@ const SideBar = () => {
                                 >
                                     <FiMoreHorizontal className={`icon`} size={18}/>
                                 </div>
-                                <UtilBox visible={selectedRoom === room.id}
+                            </Link>
+                            <UtilBox visible={selectedRoom === room.id}
                                          setVisible={(visible) => visible ? setSelectedRoom(room.id) : setSelectedRoom(null)}
                                          roomId={room.id}
-                                />
-                            </div>
-                        </Link>
+                            />
+                        </div>
                     </div>
                 ))}
             </div>

@@ -5,6 +5,12 @@ interface GridStore {
   setGrid: (num: number) => void;
 }
 
+interface ModalStore {
+  isOpen: boolean
+  setOpen: (isOpen: boolean) => void
+}
+
+
 export const useGridStore = create<GridStore>((set) => ({
   grid: [],
   setGrid: (num) =>
@@ -19,3 +25,9 @@ export const useGridStore = create<GridStore>((set) => ({
         }
       })
 }));
+
+export const useModalStore = create<ModalStore>((set) => ({
+  isOpen: false,
+  setOpen: (isOpen: boolean) => set({ isOpen }),
+}));
+

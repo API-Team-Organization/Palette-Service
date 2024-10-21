@@ -16,7 +16,6 @@ export default function Home() {
             window.location.href = '/auth/login';
             return;
         }
-        console.log(token);
     }, []);
 
     const submitHandler = async (e: any) => {
@@ -50,8 +49,8 @@ export default function Home() {
                 <div className="Logo">
                     <Image src={Logo} alt="Logo" width={100} height={100} />
                 </div>
-                <form onSubmit={submitHandler}>
-                    <SearchBar type={SearchType.BUTTON} />
+                <form onClick={submitHandler}>
+                    <SearchBar isDisabled={true}/>
                 </form>
             </main>
         </>
