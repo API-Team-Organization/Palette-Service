@@ -182,7 +182,7 @@ export default function Page ({ params }: { params: { slug: string } }) {
     return (
         <main className={`chat-container`}>
             <div className={`chatHeader`}>
-                <h1>Palette.AI</h1>
+                <h1>Palette</h1>
                 <div className={`profile`}>
                     <Image src={''} alt={''}/>
                 </div>

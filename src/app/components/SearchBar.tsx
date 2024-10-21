@@ -38,7 +38,7 @@ const SearchBar: FC<SearchBarProps> = ({
             className="input"
             type="text"
             disabled={isDisabled || type === SearchType.BUTTON}
-            placeholder="메세지 Palette.AI"
+            placeholder="메세지 Palette"
             value={message}
             onChange={handleInputChange}
         />
