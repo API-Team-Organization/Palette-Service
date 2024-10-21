@@ -102,30 +102,32 @@ const SideBar = () => {
                 </Link>
                 <div className={`listBox`}>
                     <HamburgerSVG />
-                    <h1>서비스 탐색</h1>
+                    <h1>홍보물 보관함</h1>
                 </div>
             </div>
             <div className={`roomBox`}>
                 {roomLists && roomLists.map((room, idx) => (
                     <div key={idx}>
-
                         <div className={`room`}>
-                            <Link href={`/chat/${room.id}`} style={{textDecorationLine: 'none'}}>
-                                <h2>{room.title}</h2>
+                            <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                                <Link href={`/chat/${room.id}`} style={{textDecorationLine: 'none'}}>
+                                    <h2>{room.title}</h2>
+                                </Link>
                                 <div
                                     className={`utilBox`}
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        e.stopPropagation(); // Prevents link navigation
+                                        e.stopPropagation();
                                         setSelectedRoom(selectedRoom === room.id ? null : room.id);
                                     }}
                                 >
                                     <FiMoreHorizontal className={`icon`} size={18}/>
                                 </div>
-                            </Link>
-                            <UtilBox visible={selectedRoom === room.id}
-                                         setVisible={(visible) => visible ? setSelectedRoom(room.id) : setSelectedRoom(null)}
-                                         roomId={room.id}
+                            </div>
+                            <UtilBox
+                                visible={selectedRoom === room.id}
+                                setVisible={(visible) => visible ? setSelectedRoom(room.id) : setSelectedRoom(null)}
+                                roomId={room.id}
                             />
                         </div>
                     </div>

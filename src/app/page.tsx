@@ -50,7 +50,7 @@ export default function Home() {
                     <Image src={Logo} alt="Logo" width={100} height={100} />
                 </div>
                 <form onClick={submitHandler}>
-                    <SearchBar isDisabled={true}/>
+                    <SearchBar/>
                 </form>
             </main>
         </>

@@ -38,7 +38,7 @@ const GridBtn: FC<GridProps> = ({ status, fn, x, y }) => {
   };
 
   return (
-      <BackDrop>
+      <div className={`Backdrop`} style={{display: status ? "flex" : "none",}}>
         <div
             className="grid-container"
             style={{
@@ -58,7 +58,7 @@ const GridBtn: FC<GridProps> = ({ status, fn, x, y }) => {
           ))}
           <button className={`grid-item btn`} onClick={fn}>제출</button>
         </div>
-      </BackDrop>
+      </div>
   );
 };
 

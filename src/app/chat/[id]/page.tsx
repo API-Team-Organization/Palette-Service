@@ -210,7 +210,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 ))}
             </div>
             <form onSubmit={submitHandler}>
-                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} type={SearchType.INPUT} />
+                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} />
             </form>
         </main>
     );
