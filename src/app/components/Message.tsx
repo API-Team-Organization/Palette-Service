@@ -2,6 +2,7 @@ import './scss/Message.scss'
 
 import {FC} from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface MessageProps {
     message: string;
@@ -25,8 +26,8 @@ const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
     return (
         <div className={`message-container ${isAI ? 'ai' : ''}`} style={isAI ? { maxWidth: '42rem' } : {}}>
             {
-                action === 'IMAGE' ? <Image src={message} alt={'ai-image'} className={`image`} width={250} height={250}
-                                            unoptimized={true}/> :
+                action === 'IMAGE' ? <Link href={message}><Image src={message} alt={'ai-image'} className={`image`} width={250} height={250}
+                                                  unoptimized={true}/></Link> :
                     <div style={{ display: "flex", alignItems: 'end' }}>
                         {!isAI ? <p style={{
                             fontSize: '1.25rem',
