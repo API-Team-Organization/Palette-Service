@@ -20,7 +20,7 @@ const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
 
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; // 분이 한자리일 경우 앞에 0 추가
 
-        return `${isPM ? '오후' : '오전'} ${hours}시 ${formattedMinutes}분`;
+        return `${isPM ? '오후' : '오전'} ${hours}:${formattedMinutes}분`;
     }
     return (
         <div className={`message-container ${isAI ? 'ai' : ''}`} style={isAI ? { maxWidth: '42rem' } : {}}>

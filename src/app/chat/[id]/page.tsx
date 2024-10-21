@@ -20,9 +20,14 @@ export default function Page ({ params }: { params: { slug: string } }) {
     const [messageList, setMessageList] = useState<{ message: string; action: string; isAi: string, promptId: string, datetime: Date }[]>([]);
     const [qna, setQna] = useState([]);
     const [displayQna, setDisplayQna] = useState<string | null>(null);
-    const status = qna.find(it => messageList[5]?.promptId == it.id) != null;
+    const status = qna.find(it => messageList[7]?.promptId == it.id) != null;
     const grid = useGridStore(state => state.grid);
     const [open, setOpen] = useState(false);
+    const [pos, setPos] = useState(0);
+    const [op, setOp] = useState(0);
+    let x = qna[4]?.question.xSize;
+    let y = qna[4]?.question.ySize;
+    let max = qna[4]?.question.maxCount;
 
     const getChatLists = async () => {
         try {
@@ -92,6 +97,12 @@ export default function Page ({ params }: { params: { slug: string } }) {
                 }
             }).then((res) => {
                 if (res.data.code === 200) {
+                    console.log("asdf")
+                    if (pos === 1) {
+                        setOp(1)
+                    } else {
+                        setPos(1)
+                    }
                     setSubmitted(false)
                 }
             });
@@ -132,28 +143,39 @@ export default function Page ({ params }: { params: { slug: string } }) {
 
     const clickHandler = async () => {
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
-                data: {
-                    type: "GRID",
-                    choice: grid
-                }
-            }, {
-                headers: {
-                    'x-auth-token': Cookies.get('token')
-                }
-            }).then((res) => {
-                if (res.data.code === 200) {
-                    setOpen(true)
-                }
-            });
+            if (grid.length <= max) {
+                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${params?.id}`, {
+                    data: {
+                        type: "GRID",
+                        choice: grid
+                    }
+                }, {
+                    headers: {
+                        'x-auth-token': Cookies.get('token')
+                    }
+                }).then((res) => {
+                    if (res.data.code === 200) {
+                        setOpen(true)
+                    }
+                });
+            } else {
+                alert('최대 선택 가능한 개수를 초과하였습니다.')
+            }
+
         } catch (err) {
             throw new Error(`${err}`)
         }
     }
 
-    console.log(qna)
+    // console.log(qna)
     console.log(messageList)
-    console.log(open)
+    // console.log(open)
+    // console.log(max)
+    // console.log(grid)
+    // console.log(x, y)
+    console.log(displayQna)
+    console.log(status)
+    console.log(pos)
     // @ts-ignore
     const filteredQna = qna.filter((item) => item?.answer !== null);
 
@@ -177,10 +199,10 @@ export default function Page ({ params }: { params: { slug: string } }) {
                     )
                 })}
             </div>
-            <GridBtn status={open ? false : status} fn={clickHandler} />
-            <div className={`qna-display`} style={filteredQna.length != 0 || displayQna ? { display: 'none' }: {} }>
+            <GridBtn status={open ? false : status} fn={clickHandler} x={x} y={y} />
+            <div className={`qna-display`} style={filteredQna.length != 0 || op != 0 ? { display: 'none' }: {} }>
                 {
-                    qna[0]?.question.choices.map((qna: any, idx: number) => {
+                    qna[pos]?.question.choices.map((qna: any, idx: number) => {
                         return (
                             <button className={`displayBtn`} onClick={() => setDisplay(qna.id)} key={idx}>{qna.displayName}</button>
                         )

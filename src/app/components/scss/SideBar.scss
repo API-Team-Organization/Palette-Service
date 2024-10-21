@@ -78,16 +78,21 @@
     .room {
       margin-left: 2rem;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       width: 26rem;
       padding: 0.4rem 0;
       border-radius: 0.8rem;
 
-      &:active {
-        transform: scale(0.98);
-      }
+      //&:active {
+      //  transform: scale(0.98);
+      //}
 
       &:hover {
         background: #d9d9d9;
+        .utilBox {
+          display: flex;
+        }
       }
 
       h2 {
@@ -95,6 +100,15 @@
         font-size: 1.4rem;
         font-family: Pretendard-Light;
         padding: 0.8rem;
+      }
+
+      .utilBox {
+        display: none;
+        align-items: center;
+        padding: 0.2rem;
+        background: #c9c9c9;
+        margin-right: 1rem;
+        border-radius: 0.4rem;
       }
     }
   }

@@ -1,16 +1,18 @@
 'use client';
 
-import './scss/SideBar.scss'
+import './scss/SideBar.scss';
 
 import SidebarSVG from "@/app/components/svgs/SidebarSVG";
 import WriteSVG from "@/app/components/svgs/WriteSVG";
 import Image from "next/image";
-import Logo from '../../../public/Images/Logo.png'
+import Logo from '../../../public/Images/Logo.png';
 import HamburgerSVG from "@/app/components/svgs/HamburgerSVG";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { FiMoreHorizontal } from "react-icons/fi";
+import UtilBox from "@/app/components/UtilBox";
 
 interface Room {
     id: number;
@@ -20,43 +22,48 @@ interface Room {
 
 const SideBar = () => {
     const [roomLists, setRoomLists] = useState<Room[] | null>(null);
+    const [selectedRoom, setSelectedRoom] = useState<number | null>(null); // Track which room's UtilBox is open
 
     useEffect(() => {
         const getRoomLists = async () => {
             try {
-                const res = await axios.get<{code: number, data: Room[]}>(`${process.env.NEXT_PUBLIC_API_URL}/room/list`, {
+                const res = await axios.get<{ code: number, data: Room[] }>(`${process.env.NEXT_PUBLIC_API_URL}/room/list`, {
                     headers: {
                         'x-auth-token': Cookies.get('token')
                     }
                 });
+                if (res.data.code === 401) {
+                    alert('세션이 만료되었습니다.');
+                    Cookies.remove('token');
+                    window.location.href = '/auth/login';
+                }
 
                 if (res.data.code === 200) {
-                    setRoomLists(res.data.data);
+                    setRoomLists(res.data.data.reverse());
                 }
             } catch (err) {
                 console.error('방 목록을 가져오는 중 오류 발생:', err);
             }
-        }
+        };
 
-        setInterval(() => {
-            const refreshSession = async () => {
-                try {
-                    await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session`, {
-                        headers: {
-                            'x-auth-token': Cookies.get('token')
-                        }
-                    });
-                } catch (err) {
-                    alert('세션이 만료되었습니다.')
-                    Cookies.remove('token')
-                    window.location.href = '/auth/login';
-                }
+        // Session refresh logic
+        const refreshSession = setInterval(async () => {
+            try {
+                await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session`, {
+                    headers: {
+                        'x-auth-token': Cookies.get('token')
+                    }
+                });
+            } catch (err) {
+                alert('세션이 만료되었습니다.');
+                Cookies.remove('token');
+                window.location.href = '/auth/login';
             }
-
-            refreshSession();
-        }, 40000)
+        }, 40000);
 
         getRoomLists();
+
+        return () => clearInterval(refreshSession); // Clear interval on unmount
     }, []);
 
     const submitHandler = async () => {
@@ -71,17 +78,19 @@ const SideBar = () => {
                 if (res.data.code === 200) {
                     window.location.href = `/chat/${res.data.data.id}`;
                 }
-            })
+            });
         } catch (err) {
             console.error('채팅 목록을 가져오는 중 오류 발생:', err);
         }
-    }
+    };
+
+    console.log(selectedRoom)
 
     return (
         <div className={`sideBarContainer`}>
             <div className={`topIconBox`}>
                 <div className={`iconBox`}>
-                    <SidebarSVG/>
+                    <SidebarSVG />
                 </div>
                 <div className={`iconBox`} onClick={submitHandler}>
                     <WriteSVG />
@@ -98,16 +107,32 @@ const SideBar = () => {
                 </div>
             </div>
             <div className={`roomBox`}>
-                {roomLists && roomLists.reverse().map((room) => (
-                    <Link key={room.id} href={`/chat/${room.id}`} style={{ textDecorationLine: 'none' }}>
-                        <div className={`room`}>
-                            <h2>{room.title}</h2>
-                        </div>
-                    </Link>
+                {roomLists && roomLists.map((room, idx) => (
+                    <div key={idx}>
+                        <Link href={`/chat/${room.id}`} style={{textDecorationLine: 'none'}}>
+                            <div className={`room`}>
+                                <h2>{room.title}</h2>
+                                <div
+                                    className={`utilBox`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation(); // Prevents link navigation
+                                        setSelectedRoom(selectedRoom === room.id ? null : room.id);
+                                    }}
+                                >
+                                    <FiMoreHorizontal className={`icon`} size={18}/>
+                                </div>
+                                <UtilBox visible={selectedRoom === room.id}
+                                         setVisible={(visible) => visible ? setSelectedRoom(room.id) : setSelectedRoom(null)}
+                                         roomId={room.id}
+                                />
+                            </div>
+                        </Link>
+                    </div>
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default SideBar;
