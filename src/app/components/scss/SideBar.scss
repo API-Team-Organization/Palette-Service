@@ -74,6 +74,10 @@
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     .room {
       margin-left: 2rem;
