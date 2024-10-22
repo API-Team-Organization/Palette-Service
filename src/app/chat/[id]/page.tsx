@@ -2,14 +2,15 @@
 
 import './Chat.scss'
 import Image from "next/image";
-import SearchBar, { SearchType } from "@/app/components/SearchBar";
-import { useEffect, useState, useCallback } from "react";
+import SearchBar from "@/app/components/SearchBar";
+import {useCallback, useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { io, Socket } from 'socket.io-client'
+import {io, Socket} from 'socket.io-client'
 import axios from "axios";
 import Message from "@/app/components/Message";
 import GridBtn from "@/app/components/GridBtn";
-import { useGridStore } from "@/app/store/useStore";
+import {useGridStore} from "@/app/store/useStore";
+import StateToast, {ToastProps} from "@/app/components/StateToast";
 
 interface MessageItem {
     message: string;
@@ -180,9 +181,12 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [grid, params.id]);
 
     const filteredQna = qna.filter((item) => item?.answer !== null);
+    const filterQueueList = messageList.filter((item) => item.position !== undefined);
+    console.log(filterQueueList)
 
     return (
         <main className="chat-container">
+            <StateToast type={filterQueueList[filterQueueList.length - 1] ? ToastProps.QUEUE : ToastProps.GENERATE} />
             <div className="chatHeader">
                 <h1>Palette</h1>
                 <div className="profile">

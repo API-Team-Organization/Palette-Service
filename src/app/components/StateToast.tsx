@@ -1,12 +1,25 @@
 import './scss/StateToast.scss'
+import { IoClose } from "react-icons/io5";
+import { GiCampingTent } from "react-icons/gi";
+import {FC} from "react";
 
-const StateToast = () => {
+export enum ToastProps {
+  GENERATE = "GENERATE",
+  QUEUE = "QUEUE"
+}
+
+interface StateToastProps {
+  type: ToastProps
+  title?: string
+}
+
+const StateToast: FC<StateToastProps> = ({ title, type }) => {
   return (
       <div className={`toast-container`}>
-        // x 아이콘
+        <IoClose />
         <div>
-          // 상태 아이콘
-          <h2></h2>
+          <GiCampingTent />
+          <h2>{type === ToastProps.GENERATE ? "생성중..." : title}</h2>
         </div>
       </div>
   )
