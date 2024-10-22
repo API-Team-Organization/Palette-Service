@@ -100,10 +100,10 @@ const SideBar = () => {
                     <Image src={Logo} alt={'Logo'} />
                     <h1>Palette</h1>
                 </Link>
-                <div className={`listBox`}>
+                <Link href={'/storagebox'} className={`listBox`} style={{ textDecorationLine: 'none' }}>
                     <HamburgerSVG />
                     <h1>홍보물 보관함</h1>
-                </div>
+                </Link>
             </div>
             <div className={`roomBox`}>
                 {roomLists && roomLists.map((room, idx) => (

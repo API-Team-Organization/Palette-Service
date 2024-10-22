@@ -1,4 +1,4 @@
-.backdrop {
+.modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,4 +9,12 @@
   display: flex;
   justify-content: center;
   align-items: center; /* 중앙 정렬 */
+
+  &.hide {
+    display: none;
+  }
+
+  &.show {
+    display: block;
+  }
 }

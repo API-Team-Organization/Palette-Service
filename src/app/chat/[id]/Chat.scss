@@ -47,6 +47,20 @@
     width: 76rem;
   }
 
+  .queueBox {
+    cursor: pointer;
+    margin-bottom: 2rem;
+    width: 18rem;
+    padding: 1rem 0;
+    border-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #007bff;
+    font-family: Pretendard-SemiBold;
+    border: 1px solid #007bff;
+  }
+
   .qna-display {
     display: flex;
     gap: 2rem;

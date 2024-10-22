@@ -5,7 +5,7 @@ const nextConfig = {
     },
     reactStrictMode: false,
     images: {
-        domains: ['localhost', 'dalleproduse.blob.core.windows.net']
+        domains: ['localhost', 'dalleproduse.blob.core.windows.net', 'paletteblob.blob.core.windows.net']
     }
 };
 

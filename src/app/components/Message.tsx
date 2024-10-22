@@ -5,6 +5,7 @@ import './scss/Message.scss'
 import {FC, useState} from "react";
 import Image from "next/image";
 import ImageViewer from "@/app/components/ImageViewer";
+import {useModalStore} from "@/app/store/useStore";
 
 interface MessageProps {
     message: string;
@@ -14,6 +15,8 @@ interface MessageProps {
 }
 
 const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
+    const { isOpen, setOpen } = useModalStore();
+
     function formatTime(date: Date): string {
         let hours = date.getHours();
         const minutes = date.getMinutes();
@@ -25,11 +28,9 @@ const Message: FC<MessageProps> = ({ message, action, isAI, datetime }) => {
 
         return `${isPM ? '오후' : '오전'} ${hours}:${formattedMinutes}분`;
     }
-    const [isOpen, setOpen] = useState(false)
-
     return (
         <div className={`message-container ${isAI ? 'ai' : ''}`} style={isAI ? { maxWidth: '42rem' } : {}}>
-            { isOpen && <ImageViewer url={message} /> }
+            { isOpen && <ImageViewer url={action === 'IMAGE' ? message : ''} />}
             {
                 action === 'IMAGE' ? <Image onClick={() => setOpen(!isOpen)} src={message} alt={'ai-image'} className={`image`} width={250} height={250}
                                             unoptimized={true}/>:

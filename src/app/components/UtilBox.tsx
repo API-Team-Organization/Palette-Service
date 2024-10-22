@@ -62,7 +62,7 @@ const UtilBox: FC<UtilBoxProps> = ({ visible, setVisible, roomId }) => {
         }
       }).then((res) => {
         if (res.status === 200) {
-          location.href = `/chat/${roomId}`;
+          location.href = `/`;
         }
       })
     } catch (err) {

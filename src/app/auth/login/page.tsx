@@ -23,7 +23,7 @@ export default function login () {
                 alert('이메일 형식이 올바르지 않습니다.')
                 return;
             }
-            if (passwordPattern.test(password)) {
+            if (!passwordPattern.test(password)) {
                 alert('비밀번호 형식이 올바르지 않습니다.')
                 return;
             }

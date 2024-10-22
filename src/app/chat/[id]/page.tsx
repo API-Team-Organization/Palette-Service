@@ -1,7 +1,6 @@
 'use client'
 
 import './Chat.scss'
-import Image from "next/image";
 import SearchBar from "@/app/components/SearchBar";
 import {useCallback, useEffect, useState} from "react";
 import Cookies from "js-cookie";
@@ -10,7 +9,8 @@ import axios from "axios";
 import Message from "@/app/components/Message";
 import GridBtn from "@/app/components/GridBtn";
 import {useGridStore} from "@/app/store/useStore";
-import StateToast, {ToastProps} from "@/app/components/StateToast";
+import {ToastContainer, toast, Bounce} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface MessageItem {
     message: string;
@@ -180,17 +180,64 @@ export default function Page({ params }: { params: { id: string } }) {
         }
     }, [grid, params.id]);
 
+    const ImageRegen = async () => {
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/room/${params.id}/regen`, {}, {
+                headers: { 'x-auth-token': Cookies.get('token') }
+            })
+        } catch (err) {
+            throw new Error(`${err}`)
+        }
+    }
+
+    const filteredChat = chat.filter((item) => item.resource === 'IMAGE')
     const filteredQna = qna.filter((item) => item?.answer !== null);
     const filterQueueList = messageList.filter((item) => item.position !== undefined);
-    console.log(filterQueueList)
+
+    console.log(filteredChat)
+
+    useEffect(() => {
+        if (filterQueueList.length > 0) {
+            const lastItemPosition = filterQueueList[filterQueueList.length - 1]?.position;
+            toast.info(`앞에 사용자: ${lastItemPosition}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+                style: {fontSize: 16}
+            });
+
+            if (lastItemPosition === 0) {
+                toast.success(`생성중... 잠시만기다려주세요.`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                    delay: 1000,
+                    style: {fontSize: 16}
+                });
+            }
+        }
+    }, [filterQueueList]);
+
+    console.log(messageList)
 
     return (
         <main className="chat-container">
-            <StateToast type={filterQueueList[filterQueueList.length - 1] ? ToastProps.QUEUE : ToastProps.GENERATE} />
+            <ToastContainer />
             <div className="chatHeader">
                 <h1>Palette</h1>
                 <div className="profile">
-                    <Image src={''} alt={''} />
                 </div>
             </div>
             <div className="chat">
@@ -213,8 +260,10 @@ export default function Page({ params }: { params: { id: string } }) {
                     </button>
                 ))}
             </div>
-            <form onSubmit={submitHandler}>
-                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted} />
+            <form onSubmit={submitHandler} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                {(filteredChat.length > 0 || messageList[messageList.length-1]?.resource === "IMAGE") ? <div onClick={ImageRegen} className={`queueBox`}>Image Regen</div> : filterQueueList.length > 0 && <div className={`queueBox`}>{filterQueueList[filterQueueList.length-1]?.position === 0 ? '그리는 중..' : `앞에 있는
+                    사용자: ${filterQueueList[filterQueueList.length-1]?.position}`}</div>}
+                <SearchBar message={message} setMessage={setMessage} isDisabled={submitted}/>
             </form>
         </main>
     );
